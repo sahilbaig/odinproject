@@ -18,7 +18,7 @@ class Library {
 
     MarkAsRead(book_id)
     {
-        this.list[book_id].status="read"
+        this.list[book_id-1].status=!this.list[book_id-1].status
         this.show_library()
     }
     show_library()
@@ -60,11 +60,16 @@ function create_book(book)
     pages.innerHTML = "Number of pages : " +book["pages"];
     bookCard.append(pages)
 
-
-
     const status=document.createElement("h5");
     status.className="card-title";
-    status.innerHTML = book["status"];
+    status.innerHTML = "";
+    if (book["status"])
+    {
+        status.innerHTML="Completed";
+    }
+    else{
+        status.innerHTML="Not Completed";
+    }
     bookCard.append(status)
 
     const removeButton=document.createElement("button");
@@ -74,14 +79,10 @@ function create_book(book)
         userLibrary.remove_book(book["id"])
     })
     bookCard.append(removeButton)
-
-    // <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-    // <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
-  
     
     const read=document.createElement("button");
     read.className="btn btn-danger";
-    read.innerHTML="Mark as Read";
+    read.innerHTML="Change status";
     read.addEventListener("click",function(){
         userLibrary.MarkAsRead(book["id"])
     })
@@ -107,8 +108,13 @@ add_button[0].addEventListener("click",function()
     let author=document.getElementById("book-author").value;
     let pages=document.getElementById("book-pages").value;
     let status=document.getElementById("book-status").value;
-
-
+    if (status=="on")
+    {
+        status=true
+    }
+    else{
+        status=false
+    }
     let newBook = new book(title,author, pages , status);
     userLibrary.add_book(newBook)
 })
