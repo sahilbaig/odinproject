@@ -7,5 +7,7 @@ function player(name,marker)
     }
 };
 
+
+
 const play1= new player("steve","x");
 play1.sayname()
