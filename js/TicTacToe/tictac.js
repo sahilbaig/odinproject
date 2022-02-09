@@ -2,9 +2,14 @@ const tictac =() =>{
     // var arr=Array(3).fill(Array(3));
     
     var arr=[
-        [0,1,0,],
-        [0,0,1],
-        [,0,0]
+        [0,0,0,],
+        [0,0,0],
+        [0,0,0]
+    ]
+
+    var players=
+    [
+        {}
     ]
     const checkDiagnoal = ()=>{
         var d1=true;
@@ -65,9 +70,61 @@ const tictac =() =>{
 
     const result = () =>{
         return (checkCol()||checkDiagnoal()|| checkRow())
+    }   
+
+
+    const clearTable = () =>{
+        for(var i=0;i<3;i++)
+        {
+            for(var j=0;j<3;j++)
+            {
+                var block=document.getElementsByName(String(i)+String(j));        
+                block[0].innerHTML=""
+            }
+        }
+
     }
-    return{arr,result};
+
+
+    const genrateTable=()=>{
+        for(var i=0;i<3;i++)
+        {
+            for(var j=0;j<3;j++)
+            {
+                var block=document.getElementsByName(String(i)+String(j));        
+                const btn = document.createElement("button");
+                btn.innerHTML = arr[i][j];
+                btn.setAttribute("i",i)
+                btn.setAttribute("j",j)
+                btn.onclick = function()
+                {
+                    handleClick(this)
+                }
+                block[0].appendChild(btn);
+            }
+        }
+    }
+
+    const handleClick=(x)=>{
+        var i=x.getAttribute("i")
+        var j=x.getAttribute("j")
+        
+        arr[i][j]="X"
+        clearTable()
+        genrateTable()
+    }
+
+    return{result,genrateTable,handleClick};
 }
 
-const player=tictac();
-console.log(player.result())
+const table=tictac();
+table.genrateTable();
+
+const players = (symbol,player_name) =>{
+    const playTurn= table.handleClick;
+    const showTable=table.genrateTable;
+    return {showTable,playTurn ,symbol,player_name}
+}
+
+const player1=players("X","somebody")
+const player2=players("0","something")
