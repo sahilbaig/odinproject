@@ -1,14 +1,34 @@
+
+const players = (symbol,player_name) =>{
+    return {symbol,player_name}
+}
+
+
+const player1=players("X","Player1")
+const player2=players("O","Player2")
+playerList=[player1,player2]
+
+
 const tictac =() =>{
     // var arr=Array(3).fill(Array(3));
     
     var symbol='#';
-    var winner=0;
+    var current_player=0;
     var arr=[
-        [1,2,3,],
-        [4,5,6],
-        [7,8,9]
+        ["_","_","_",],
+        ["_","_","_"],
+        ["_","_","_"]
     ]
 
+    const reset = () =>{
+        arr=[
+            ["_","_","_",],
+            ["_","_","_"],
+            ["_","_","_"]
+        ]
+        clearTable()
+        genrateTable();
+    }
     const changeSymbol = (playerSymbol) =>{
         symbol=playerSymbol
     }
@@ -17,16 +37,17 @@ const tictac =() =>{
         var d2=true;
         for(var i=0;i<3;i++)
         {
-            if(arr[i][i]!=arr[0][0])
+            if(arr[i][i]!=arr[0][0] || arr[i][i]=="_") 
             {
                 d1=false;
             }
 
-            if(arr[i][2-i]!=arr[0][2] )
+            if(arr[i][2-i]!=arr[0][2] || arr[i][2-i]=="_" )
             {
                 d2=false;
             }
         }
+
         return (d1||d2);
     }
 
@@ -36,9 +57,8 @@ const tictac =() =>{
         {
             for( var j=1;j<3;j++)
             {
-                if(arr[i][j]!=arr[i][j-1] )
+                if(arr[i][j]!=arr[i][j-1] || arr[i][j]=="_")
                 {
-                    flag=false;
                     break;
                 }
                 else if(j==2)
@@ -51,29 +71,26 @@ const tictac =() =>{
     }
 
     const checkCol = () =>{   
+        var flag=true;
         for(var i=0;i<3;i++)
-        {
-            for( var j=1;j<3;j++)
+        { 
+            for(j=1;j<3;j++)
             {
-                if(arr[j][i]!=arr[j][i-1] )
+                if(arr[j][i]!=arr[j-1][i] || arr[j][i]=='_')
                 {
                     flag=false;
                     break;
                 }
-                else if(j==2)
-                {
-                    return true;
-                }
-            }        
+                if(j==2) return true;
+            }            
         }
-        return false;
+
+        
+        return flag;
     }
 
     const result = () =>{
-        if(winner!=0){
-            return (checkCol()||checkDiagnoal()|| checkRow())
-        }
-        return false
+            return (checkCol()||checkDiagnoal()||checkRow())
         
     }   
 
@@ -91,6 +108,7 @@ const tictac =() =>{
     }
 
     const genrateTable=()=>{
+        current_player^= 1
         for(var i=0;i<3;i++)
         {
             for(var j=0;j<3;j++)
@@ -98,12 +116,17 @@ const tictac =() =>{
                 var block=document.getElementsByName(String(i)+String(j));        
                 const btn = document.createElement("button");
                 btn.innerHTML = arr[i][j];
+                if (result()==false)
+                {
+                    btn.onclick = function()
+                    {
+                        handleClick(this,symbol)
+                    }
+                }
                 btn.setAttribute("i",i)
                 btn.setAttribute("j",j)
-                btn.onclick = function()
-                {
-                    handleClick(this,symbol)
-                }
+                
+
                 block[0].appendChild(btn);
             }
         }
@@ -112,26 +135,30 @@ const tictac =() =>{
     const handleClick=(x,symbol)=>{
         var i=x.getAttribute("i")
         var j=x.getAttribute("j")
+        if (arr[i][j]=="_"){
+            arr[i][j]=playerList[current_player].symbol
+            if(result()==true){
+                const end = document.createElement("p");
+                end.innerHTML="the winner is "+ playerList[current_player].player_name
+
+                document.getElementById("board").appendChild(end)
+
+            }
+        }
         
-        arr[i][j]=symbol
+
         clearTable()
         genrateTable()
     }
 
-    return{result,genrateTable,handleClick,changeSymbol,symbol,winner};
+    return{genrateTable,reset};
 }
+
 
 const table=tictac();
 table.genrateTable();
 
-const players = (symbol,player_name) =>{
-    const playTurn = () =>{
-        table.changeSymbol(symbol);
-    } 
-    const showTable=table.genrateTable;     
-    return {showTable,playTurn ,symbol,player_name}
+reset=document.getElementById("reset")
+reset.onclick=function(){
+    table.reset();
 }
-
-const player1=players("X","somebody")
-const player2=players("O","something")
-playerList=[player1,player2]
