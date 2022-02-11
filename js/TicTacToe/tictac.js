@@ -26,6 +26,8 @@ const tictac =() =>{
             ["_","_","_"],
             ["_","_","_"]
         ]
+        winner=document.getElementById("winner")
+        winner.innerHTML=""
         clearTable()
         genrateTable();
     }
@@ -138,11 +140,8 @@ const tictac =() =>{
         if (arr[i][j]=="_"){
             arr[i][j]=playerList[current_player].symbol
             if(result()==true){
-                const end = document.createElement("p");
+                end = document.getElementById("winner");
                 end.innerHTML="the winner is "+ playerList[current_player].player_name
-
-                document.getElementById("board").appendChild(end)
-
             }
         }
         
