@@ -2,8 +2,9 @@ import logo from './logo.svg';
 import './App.css';
 import React,{Component} from 'react';
 import PersonalDetails from './personalDetails';
-import Work from './workDetails';
-import Education from './educationDetails';
+import Work from './components/Work/workDetails';
+import Education from './components/Education/educationDetails'
+import CV from './components/CV/cv';
 
 class App extends Component{
   constructor(props){
@@ -11,9 +12,9 @@ class App extends Component{
 
     this.state ={
       "personal":{
-        "name":"me",
-        "email":"notme@me.com",
-        "phone":"1111"
+        "name":"",
+        "email":"",
+        "phone":""
       },
       "work":[
       ],
@@ -26,7 +27,6 @@ class App extends Component{
     this.handlePersonal=this.handlePersonal.bind(this)
     this.addExperience=this.addExperience.bind(this)
     this.editExperience=this.editExperience.bind(this)
-    this.generatekey=this.generatekey.bind(this)
     this.deleteExp=this.deleteExp.bind(this)
     this.showWork=this.showWork.bind(this)
 
@@ -72,11 +72,6 @@ class App extends Component{
     abc[k]=v
     const wow=level
     this.setState({[wow]:abc});
-  }
-
-  generatekey(){
-    let a= new Date().getTime()
-    return a;
   }
 
   showWork(){
@@ -135,26 +130,34 @@ class App extends Component{
    
     return(
       <div>
-        <h3>Personal Details:</h3>
-        <PersonalDetails handleClick={this.handlePersonal} ></PersonalDetails>
-        
-        <h3>Work Experience:</h3>
-        {this.showWork()}
-        <button onClick={()=>{
-          this.addExperience()}
-        }>Add Experience</button>
-        <br></br>
+        <div className='split left'>
+          <h3>Personal Details:</h3>
+          <PersonalDetails handleClick={this.handlePersonal} ></PersonalDetails>
+          
+          <h3>Work Experience:</h3>
+          {this.showWork()}
+          <button onClick={()=>{
+            this.addExperience()}
+          }>Add Experience</button>
+          <br></br>
 
 
-        <h3>Education</h3>
-        {this.showEducation()}
-        <button onClick={()=>{
-          this.addEducation()}
-        }>Add Education</button>
-        
-        <button onClick={()=>{
-          console.log(this.state)
-        }}>Show state</button>
+          <h3>Education</h3>
+          {this.showEducation()}
+          <button onClick={()=>{
+            this.addEducation()}
+          }>Add Education</button>
+          
+          <button onClick={()=>{
+            console.log(this.state)
+          }}>Show state</button>
+        </div>
+
+        <div className='split right'>
+            <h1>Generated</h1><br/>
+            <CV data={this.state}></CV>
+
+        </div>
       </div>
     )
   }
